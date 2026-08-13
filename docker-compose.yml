@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: kisanconnect_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kisanconnect
+      POSTGRES_PASSWORD: kisanconnect
+      POSTGRES_DB: kisanconnect
+    ports:
+      - "5432:5432"
+    volumes:
+      - kisanconnect_pgdata:/var/lib/postgresql/data
+
+volumes:
+  kisanconnect_pgdata:
