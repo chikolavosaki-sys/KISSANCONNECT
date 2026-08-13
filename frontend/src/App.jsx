@@ -3,19 +3,20 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import SchemesList from './components/SchemesList';
 import Footer from './components/Footer';
+import { LanguageProvider } from './context/LanguageContext';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-between">
-      <div>
+    <LanguageProvider>
+      <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
         <Navbar />
-        <main>
+        <main className="flex-grow">
           <Hero />
           <SchemesList />
         </main>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </LanguageProvider>
   );
 }
 
