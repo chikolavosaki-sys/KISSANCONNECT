@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-const Hero = () => {
+const Hero = ({ searchQuery, setSearchQuery }) => {
   const { t } = useLanguage();
 
   return (
@@ -16,6 +16,8 @@ const Hero = () => {
         <div className="flex max-w-md mx-auto bg-white rounded-lg p-1.5 shadow-lg">
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.searchPlaceholder}
             className="w-full px-4 py-2 text-gray-800 focus:outline-none text-sm"
           />
