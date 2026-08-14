@@ -1,51 +1,53 @@
 import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import SchemesList from './components/SchemesList';
-import EligibilityChecker from './components/EligibilityChecker';
-import FarmerDashboard from './components/FarmerDashboard';
-import SupportHelpline from './components/SupportHelpline';
-import Footer from './components/Footer';
-import { LanguageProvider } from './context/LanguageContext';
+import SignIn from './components/SignIn';
+import FarmerProfileForm from './components/FarmerProfileForm';
+import Dashboard from './components/Dashboard';
 
-function App() {
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Saved Schemes State
-  const [savedSchemes, setSavedSchemes] = useState([
-    {
-      id: 1,
-      title: "PM-Kisan Samman Nidhi",
-      category: "Financial Aid",
-      officialUrl: "https://pmkisan.gov.in"
-    }
-  ]);
+export default function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [farmerProfile, setFarmerProfile] = useState(null);
 
-  const handleRemoveScheme = (schemeId) => {
-    setSavedSchemes(savedSchemes.filter((item) => item.id !== schemeId));
+  const handleLoginSuccess = (userData) => {
+    setCurrentUser(userData);
   };
 
-  return (
-    <LanguageProvider>
-      <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-        <Navbar />
-        <main className="flex-grow">
-          <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          
-          {/* Farmer Dashboard Section */}
-          <FarmerDashboard 
-            savedSchemes={savedSchemes} 
-            onRemoveScheme={handleRemoveScheme} 
-          />
+  const handleProfileSubmit = (profileData) => {
+    setFarmerProfile(profileData);
+  };
 
-          <EligibilityChecker />
-          <SchemesList searchQuery={searchQuery} />
-          <SupportHelpline />
-        </main>
-        <Footer />
-      </div>
-    </LanguageProvider>
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setFarmerProfile(null);
+  };
+
+  if (!currentUser) {
+    return <SignIn onLoginSuccess={handleLoginSuccess} />;
+  }
+
+  if (currentUser.role === 'farmer' && !farmerProfile) {
+    return <FarmerProfileForm onSubmitProfile={handleProfileSubmit} />;
+  }
+
+  return (
+    <div>
+      {/* Navigation Header */}
+      <nav className="bg-white border-b border-slate-200 px-6 py-3 flex justify-between items-center">
+        <div className="font-bold text-emerald-700 text-xl tracking-tight">🌱 KisanConnect</div>
+        <div className="flex items-center gap-4">
+          <span className="text-xs bg-slate-100 text-slate-700 font-semibold px-2.5 py-1 rounded-md uppercase">
+            Role: {currentUser.role}
+          </span>
+          <button
+            onClick={handleLogout}
+            className="text-xs font-semibold text-red-600 hover:text-red-800 transition"
+          >
+            Logout ↵
+          </button>
+        </div>
+      </nav>
+
+      {/* Main Dashboard */}
+      <Dashboard userRole={currentUser.role} farmerProfile={farmerProfile} />
+    </div>
   );
 }
-
-export default App;
