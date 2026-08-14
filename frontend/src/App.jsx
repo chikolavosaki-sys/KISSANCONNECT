@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import SchemesList from './components/SchemesList';
 import EligibilityChecker from './components/EligibilityChecker';
+import SupportHelpline from './components/SupportHelpline';
 import Footer from './components/Footer';
 import { LanguageProvider } from './context/LanguageContext';
 
@@ -17,6 +18,7 @@ function App() {
           <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
           <EligibilityChecker />
           <SchemesList searchQuery={searchQuery} />
+          <SupportHelpline />
         </main>
         <Footer />
       </div>
