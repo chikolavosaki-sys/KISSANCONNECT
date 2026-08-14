@@ -1,49 +1,102 @@
 import React, { useState } from 'react';
-import AuthModal from './AuthModal';
 import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const { lang, toggleLanguage, t } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
-      <nav className="bg-white shadow-sm border-b sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl">🌾</span>
-              <span className="font-bold text-xl text-emerald-800">KisanConnect</span>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#home" className="text-gray-700 hover:text-emerald-600 font-medium text-sm">{t.navHome}</a>
-              <a href="#schemes" className="text-gray-700 hover:text-emerald-600 font-medium text-sm">{t.navSchemes}</a>
-              <a href="#about" className="text-gray-700 hover:text-emerald-600 font-medium text-sm">{t.navAbout}</a>
-            </div>
+    <nav className="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center gap-2 font-bold text-xl tracking-wide">
+            <span>🌾</span>
+            <span>KissanConnect</span>
+          </div>
 
-            <div className="flex items-center space-x-3">
-              {/* Language Switch Button */}
+          {/* Desktop Links */}
+          <div className="hidden md:flex items-center space-x-6 text-sm font-medium">
+            <a href="#schemes" className="hover:text-emerald-200 transition">
+              {t.schemesHeader}
+            </a>
+            <a href="#about" className="hover:text-emerald-200 transition">
+              About
+            </a>
+
+            {/* Language Switcher */}
+            <div className="flex bg-emerald-800 rounded-lg p-1 border border-emerald-600">
               <button
-                onClick={toggleLanguage}
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs px-3 py-1.5 rounded-full font-semibold flex items-center gap-1 border transition cursor-pointer"
+                onClick={() => setLang('en')}
+                className={`px-3 py-1 rounded text-xs font-bold transition cursor-pointer ${
+                  lang === 'en' ? 'bg-white text-emerald-800 shadow' : 'text-emerald-100 hover:text-white'
+                }`}
               >
-                🌐 {lang === 'en' ? 'हिंदी (HI)' : 'English (EN)'}
+                EN
               </button>
-
               <button
-                onClick={() => setIsAuthOpen(true)}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition duration-200"
+                onClick={() => setLang('hi')}
+                className={`px-3 py-1 rounded text-xs font-bold transition cursor-pointer ${
+                  lang === 'hi' ? 'bg-white text-emerald-800 shadow' : 'text-emerald-100 hover:text-white'
+                }`}
               >
-                {t.loginBtn}
+                हिंदी
               </button>
             </div>
           </div>
-        </div>
-      </nav>
 
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
-    </>
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center gap-3">
+            {/* Language Switcher Mobile */}
+            <div className="flex bg-emerald-800 rounded-lg p-0.5 border border-emerald-600">
+              <button
+                onClick={() => setLang('en')}
+                className={`px-2 py-0.5 rounded text-xs font-bold ${
+                  lang === 'en' ? 'bg-white text-emerald-800' : 'text-emerald-100'
+                }`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLang('hi')}
+                className={`px-2 py-0.5 rounded text-xs font-bold ${
+                  lang === 'hi' ? 'bg-white text-emerald-800' : 'text-emerald-100'
+                }`}
+              >
+                हिंदी
+              </button>
+            </div>
+
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md hover:bg-emerald-800 focus:outline-none"
+            >
+              {isOpen ? '✕' : '☰'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Drawer */}
+      {isOpen && (
+        <div className="md:hidden bg-emerald-800 border-t border-emerald-600 px-4 pt-2 pb-4 space-y-2">
+          <a
+            href="#schemes"
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-emerald-700"
+          >
+            {t.schemesHeader}
+          </a>
+          <a
+            href="#about"
+            onClick={() => setIsOpen(false)}
+            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-emerald-700"
+          >
+            About
+          </a>
+        </div>
+      )}
+    </nav>
   );
 };
 
