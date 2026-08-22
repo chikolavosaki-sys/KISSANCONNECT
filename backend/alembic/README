@@ -1,0 +1,1 @@
+Alembic migration directory. Generate future migrations with: alembic revision --autogenerate -m 'description'
