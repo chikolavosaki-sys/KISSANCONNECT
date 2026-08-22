@@ -2,10 +2,12 @@ fastapi
 uvicorn[standard]
 sqlalchemy>=2.0
 psycopg[binary]
+psycopg2-binary
 pydantic>=2.0
 pydantic-settings
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt==4.0.1
 scikit-learn
 numpy
 alembic
