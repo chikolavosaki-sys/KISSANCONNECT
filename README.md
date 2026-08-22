@@ -52,6 +52,50 @@ kissan-connect-02/
 └── README.md
 ```
 
+## Quick Start (Docker — recommended)
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- PostgreSQL on `localhost:5432`
+- Backend API on `http://127.0.0.1:8000`
+- Frontend on `http://localhost:5173`
+
+The backend container automatically runs database initialization and seed data on first boot.
+
+## Quick Start (Neon / existing PostgreSQL)
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+# Create backend/.env with your Neon URL (see backend/.env.example)
+python scripts/init_db.py
+python scripts/seed_data.py
+python run.py
+```
+
+In a second terminal:
+
+```bash
+cd frontend
+echo "VITE_API_URL=http://127.0.0.1:8000/api" > .env
+npm install
+npm run dev
+```
+
+Or run the setup script:
+
+```bash
+bash scripts/setup.sh
+```
+
 ## Requirements
 
 - Python 3.10 or newer
@@ -205,23 +249,46 @@ Admin endpoints require one of these roles:
 
 ## Configuration and Deployment
 
-### Frontend deployment
+### Frontend deployment (Vercel)
 
-Set the build-time variable to the deployed backend:
+1. Push this repo to GitHub.
+2. Import the project in [Vercel](https://vercel.com/new) and set the **Root Directory** to `frontend`.
+3. Add environment variable:
+   ```env
+   VITE_API_URL=https://YOUR-BACKEND-DOMAIN/api
+   ```
+4. Deploy.
 
-```env
-VITE_API_URL=https://YOUR-BACKEND-DOMAIN/api
+Or from the CLI (after `vercel login`):
+
+```bash
+cd frontend
+npm run build
+vercel --prod
 ```
 
-### Backend deployment
+### Backend deployment (Render / Railway / any Docker host)
 
-Set the deployed frontend origin in `CORS_ORIGINS`:
+The FastAPI backend is not suited for Vercel serverless. Deploy `backend/` using the included `Dockerfile` and `render.yaml`.
+
+Set these environment variables on your host:
 
 ```env
-CORS_ORIGINS=https://YOUR-FRONTEND-DOMAIN
+DATABASE_URL=postgresql+psycopg://USER:PASS@HOST/neondb?sslmode=require
+JWT_SECRET_KEY=<long-random-secret>
+CORS_ORIGINS=https://YOUR-VERCEL-FRONTEND-DOMAIN
 ```
 
-If a reverse proxy serves both applications from one origin, the frontend can use `/api` as its production API path.
+After deploying the backend, update `VITE_API_URL` in Vercel to point to the backend URL.
+
+Run migrations once against Neon:
+
+```bash
+cd backend
+source .venv/bin/activate
+python scripts/init_db.py
+python scripts/seed_data.py
+```
 
 Before production deployment:
 
