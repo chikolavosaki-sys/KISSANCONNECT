@@ -4,7 +4,7 @@
    `npm run build`
 
 2. Configure:
-   `VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api`
+   `VITE_API_URL=https://YOUR-BACKEND-DOMAIN/api`
    when frontend/backend are on different domains.
 
 3. Backend CORS must include the exact frontend origin.

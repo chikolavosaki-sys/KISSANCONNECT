@@ -1,29 +1,11 @@
-const LOCAL_API_BASE_URL = "http://127.0.0.1:8000/api";
-
 function getApiBaseUrl() {
-  const configured = import.meta.env.VITE_API_BASE_URL?.trim();
+  const configured = import.meta.env.VITE_API_URL?.trim();
 
   if (configured) {
     return configured.replace(/\/+$/, "");
   }
 
-  if (typeof window !== "undefined") {
-    const hostname = window.location.hostname;
-    const isLocal =
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "::1";
-
-    if (isLocal) {
-      return LOCAL_API_BASE_URL;
-    }
-
-    // Production fallback assumes the reverse proxy serves the FastAPI API
-    // under the same origin at /api.
-    return "/api";
-  }
-
-  return LOCAL_API_BASE_URL;
+  return "/api";
 }
 
 export const API_BASE_URL = getApiBaseUrl();
@@ -78,14 +60,19 @@ export async function apiRequest(path, options = {}) {
       ...options,
       headers,
     });
-  } catch (error) {
+    } catch (error) {
     const target = API_BASE_URL.startsWith("/")
       ? `${window.location.origin}${API_BASE_URL}`
       : API_BASE_URL;
 
+    console.error("Kissan Connect API request failed:", {
+      url: `${target}${path}`,
+      error,
+    });
+
     throw new Error(
-      `Cannot connect to Kissan Connect API at ${target}. ` +
-        "Check the backend URL, CORS configuration, and that the API is reachable."
+      `Unable to reach Kissan Connect API at ${target}. ` +
+      `Browser error: ${error?.message || "Unknown network error"}`
     );
   }
 

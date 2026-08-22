@@ -210,7 +210,7 @@ Admin endpoints require one of these roles:
 Set the build-time variable to the deployed backend:
 
 ```env
-VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api
+VITE_API_URL=https://YOUR-BACKEND-DOMAIN/api
 ```
 
 ### Backend deployment

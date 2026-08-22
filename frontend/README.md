@@ -19,7 +19,7 @@ http://127.0.0.1:8000/api
 For a separately deployed backend, set:
 
 ```text
-VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api
+VITE_API_URL=https://YOUR-BACKEND-DOMAIN/api
 ```
 
 See `README_BACKEND_INTEGRATION.md` for the complete API contract and deployment notes.

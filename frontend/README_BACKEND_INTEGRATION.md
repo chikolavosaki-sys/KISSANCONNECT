@@ -77,7 +77,7 @@ Restart the backend after changing it.
 For a frontend deployed separately from the backend, set the build-time environment variable:
 
 ```text
-VITE_API_BASE_URL=https://YOUR-BACKEND-DOMAIN/api
+VITE_API_URL=https://YOUR-BACKEND-DOMAIN/api
 ```
 
 The backend deployment must also allow the deployed frontend origin in:
