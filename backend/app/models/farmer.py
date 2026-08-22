@@ -1,5 +1,5 @@
 from decimal import Decimal
-from sqlalchemy import Integer, Numeric, String, BigInteger, ForeignKey
+from sqlalchemy import Boolean, Integer, Numeric, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
@@ -15,7 +15,7 @@ class Farmer(Base):
     education_level: Mapped[str | None] = mapped_column(String(100))
     family_size: Mapped[int | None] = mapped_column(Integer)
     social_category: Mapped[str | None] = mapped_column(String(50))
-    differently_abled: Mapped[bool | None]
+    differently_abled: Mapped[bool | None] = mapped_column(Boolean, default=None)
     state_id: Mapped[int] = mapped_column(ForeignKey("states.state_id"))
     district_id: Mapped[int] = mapped_column(ForeignKey("districts.district_id"))
     pincode: Mapped[int | None] = mapped_column(Integer)
