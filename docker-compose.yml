@@ -33,12 +33,10 @@ services:
       HOST: 0.0.0.0
       PORT: 8000
       RELOAD: "false"
+      RUN_DB_INIT: "true"
+      SEED_DEMO_DATA: "true"
     ports:
       - "8000:8000"
-    command: >
-      sh -c "python scripts/init_db.py &&
-             python scripts/seed_data.py &&
-             python run.py"
 
   frontend:
     build:
