@@ -65,7 +65,8 @@ This starts:
 - Backend API on `http://127.0.0.1:8000`
 - Frontend on `http://localhost:5173`
 
-The backend container automatically runs database initialization and seed data on first boot.
+The backend container automatically creates the schema, applies the included SQL migrations,
+and seeds demo reference data. These actions are idempotent, so container restarts are safe.
 
 ## Quick Start (Neon / existing PostgreSQL)
 
@@ -277,11 +278,19 @@ Set these environment variables on your host:
 DATABASE_URL=postgresql+psycopg://USER:PASS@HOST/neondb?sslmode=require
 JWT_SECRET_KEY=<long-random-secret>
 CORS_ORIGINS=https://YOUR-VERCEL-FRONTEND-DOMAIN
+RUN_DB_INIT=true
+SEED_DEMO_DATA=true
 ```
 
-After deploying the backend, update `VITE_API_URL` in Vercel to point to the backend URL.
+`RUN_DB_INIT=true` makes the container create the schema and apply the included idempotent
+migrations on startup. `SEED_DEMO_DATA=true` adds the project's demo states, districts, and
+schemes; set it to `false` after importing approved production reference data.
 
-Run migrations once against Neon:
+After deploying the backend, update `VITE_API_URL` in Vercel to point to the backend URL,
+then redeploy the frontend. This value is compiled into the Vite build and cannot be changed
+without a new frontend deployment.
+
+For a manual database setup (instead of container startup), run:
 
 ```bash
 cd backend
@@ -307,7 +316,8 @@ Before production deployment:
 ### Cannot connect to the API
 
 1. Confirm the backend is running from `backend/`.
-2. Open `http://127.0.0.1:8000/health` and confirm it returns a healthy response.
+2. Open `http://127.0.0.1:8000/health` and confirm it returns a healthy response with
+   `database: connected`.
 3. Confirm `frontend/.env` uses `http://127.0.0.1:8000/api`.
 4. Confirm the browser origin and Vite port are included in `CORS_ORIGINS`.
 5. Restart the backend after changing `.env`.

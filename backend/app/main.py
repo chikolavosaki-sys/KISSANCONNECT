@@ -1,7 +1,11 @@
 from fastapi import FastAPI
+from fastapi import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.config import settings
+from app.core.database import engine
 from app.api.routes import auth, locations, farmers, schemes, applications, bookmarks, admin, matching
 
 app = FastAPI(
@@ -33,4 +37,11 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}
+    """Report readiness only when the API can reach its database."""
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except SQLAlchemyError as exc:
+        raise HTTPException(status_code=503, detail="Database unavailable") from exc
+
+    return {"status": "healthy", "database": "connected"}
