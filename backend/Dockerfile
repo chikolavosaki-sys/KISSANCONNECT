@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["python", "run.py"]
+CMD ["sh", "scripts/start.sh"]

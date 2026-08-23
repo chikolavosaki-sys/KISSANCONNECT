@@ -9,6 +9,9 @@
 
 3. Backend CORS must include the exact frontend origin.
 
+   The Vite variable is baked into the build. Change it in Vercel, then redeploy
+   the frontend for the new API URL to take effect.
+
 4. Test:
    - `/api/locations/states` loads on registration.
    - Selecting a state loads districts.
